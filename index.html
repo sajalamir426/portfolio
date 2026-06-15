@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sajal Amir — Portfolio</title>
+  <meta name="description" content="Sajal Amir — BS Computer Science student. Web design, AI, cybersecurity & problem solving portfolio." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* =========================================================
+       PROJECT CARDS — IMAGE + SCAN EFFECT
+       ========================================================= */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .project-card {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow: hidden;
+      cursor: pointer;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+      position: relative;
+    }
+
+    .project-card:hover {
+      border-color: rgba(56, 189, 248, 0.28);
+      transform: translateY(-6px) scale(1.015);
+      box-shadow: 0 16px 44px -18px rgba(56, 189, 248, 0.32);
+    }
+
+    .project-card__img-wrap {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .project-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.55;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      display: block;
+    }
+
+    .project-card:hover .project-card__img-wrap img {
+      opacity: 0.72;
+      transform: scale(1.04);
+    }
+
+    .project-card__img-wrap::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent-3), var(--accent), var(--accent-3), transparent);
+      box-shadow: 0 0 18px 4px rgba(56, 189, 248, 0.55);
+      opacity: 0;
+      transition: none;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .project-card:hover .project-card__img-wrap::after {
+      opacity: 1;
+      animation: scanUp 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes scanUp {
+      0%   { bottom: -3px;  opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 1; }
+      100% { bottom: calc(100% + 3px); opacity: 0; }
+    }
+
+    .project-card__img-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(56, 189, 248, 0.0) 0%,
+        rgba(56, 189, 248, 0.06) 50%,
+        rgba(56, 189, 248, 0.0) 100%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .project-card:hover .project-card__img-wrap::before {
+      opacity: 1;
+      animation: glowSweep 1.1s ease forwards;
+    }
+
+    @keyframes glowSweep {
+      0%   { background-position: 0% 100%; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { background-position: 0% 0%;  opacity: 0; }
+    }
+
+    .project-card__body {
+      padding: 22px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .project-card__top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .project-card__icon {
+      font-size: 1.5rem;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      background: rgba(56, 189, 248, 0.07);
+      flex-shrink: 0;
+      transition: transform var(--transition);
+    }
+
+    .project-card:hover .project-card__icon {
+      transform: scale(1.1) rotate(-6deg);
+    }
+
+    .project-card__title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text);
+    }
+
+    .project-card__desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .project-card__tags {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .project-card__tags span {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 4px 11px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--accent-3);
+      background: rgba(56,189,248,0.05);
+    }
+
+    @media (max-width: 980px) {
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card__img-wrap { height: 170px; }
+    }
+
+    /* =========================================================
+       CERTIFICATES SECTION
+       ========================================================= */
+    .certificates-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .cert-card {
+      position: relative;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .cert-card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 50px -20px rgba(56, 189, 248, 0.38);
+    }
+
+    /* Certificate image wrapper */
+    .cert-card__img-wrap {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      overflow: hidden;
+    }
+
+    .cert-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      opacity: 0.6;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      display: block;
+    }
+
+    .cert-card:hover .cert-card__img-wrap img {
+      opacity: 0.82;
+      transform: scale(1.05);
+    }
+
+    /* Scan line — same effect as project cards */
+    .cert-card__img-wrap::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      bottom: -100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent-3), var(--accent), var(--accent-3), transparent);
+      box-shadow: 0 0 18px 4px rgba(56, 189, 248, 0.55);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .cert-card:hover .cert-card__img-wrap::after {
+      opacity: 1;
+      animation: scanUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Glow sweep overlay */
+    .cert-card__img-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(56, 189, 248, 0.0) 0%,
+        rgba(56, 189, 248, 0.08) 50%,
+        rgba(56, 189, 248, 0.0) 100%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .cert-card:hover .cert-card__img-wrap::before {
+      opacity: 1;
+      animation: glowSweep 1.2s ease forwards;
+    }
+
+    /* Badge overlay on image */
+    .cert-card__badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 100px;
+      background: rgba(4, 8, 18, 0.82);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent-3);
+      letter-spacing: 0.04em;
+    }
+
+    /* Body below image */
+    .cert-card__body {
+      padding: 20px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cert-card__top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cert-card__icon {
+      font-size: 1.4rem;
+      width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      background: rgba(56, 189, 248, 0.07);
+      flex-shrink: 0;
+      transition: transform var(--transition);
+    }
+
+    .cert-card:hover .cert-card__icon {
+      transform: scale(1.1) rotate(-6deg);
+    }
+
+    .cert-card__title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text);
+    }
+
+    .cert-card__issuer {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cert-card__issuer i {
+      color: var(--accent-3);
+      font-size: 0.75rem;
+    }
+
+    .cert-card__tags {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .cert-card__tags span {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 4px 10px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--accent-3);
+      background: rgba(56,189,248,0.05);
+    }
+
+    @media (max-width: 700px) {
+      .certificates-grid {
+        grid-template-columns: 1fr;
+      }
+      .cert-card__img-wrap { height: 210px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow--one"></div>
+  <div class="bg-glow bg-glow--two"></div>
+
+  <!-- ===== CV MODAL ===== -->
+  <div class="cv-modal" id="cv-modal" role="dialog" aria-modal="true" aria-label="Sajal Amir CV">
+    <div class="cv-modal__backdrop" id="cv-backdrop"></div>
+    <div class="cv-modal__box">
+      <div class="cv-modal__header">
+        <span class="cv-modal__title"><i class="fa-solid fa-file-pdf"></i> Sajal Amir — CV</span>
+          <a href="CV_Sajal.pdf" download="Sajal_Amir_CV.pdf" class="btn btn--primary cv-download-btn">
+            <i class="fa-solid fa-download"></i> Download
+          </a>
+          <button class="cv-modal__close" id="cv-close" aria-label="Close CV">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div class="cv-modal__body">
+        <iframe src="CV_Sajal.pdf" title="Sajal Amir CV" class="cv-iframe"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar" id="navbar">
+    <a href="#home" class="logo">Sajal<span>.Amir</span></a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
+    <label for="nav-toggle" class="hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </label>
+    <nav class="nav-links">
+      <a href="#home" class="nav-link"><span>Home</span></a>
+      <a href="#about" class="nav-link"><span>About</span></a>
+      <a href="#skills" class="nav-link"><span>Skills</span></a>
+      <a href="#projects" class="nav-link"><span>Projects</span></a>
+      <a href="#certificates" class="nav-link"><span>Certificates</span></a>
+      <a href="#contact" class="nav-link"><span>Contact</span></a>
+      <button class="nav-cv-btn" id="nav-cv-open" aria-label="Open CV">
+        <i class="fa-solid fa-file-arrow-down"></i> My CV
+      </button>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <div class="hero__content">
+      <p class="hero__eyebrow"><span class="eyebrow-dot"></span> Available for opportunities</p>
+      <h1 class="hero__title">
+        Hi, I'm <span class="gradient-text">Sajal Amir</span>
+      </h1>
+      <p class="hero__typewriter">
+        <span class="typewriter-static">I'm a </span><span class="typewriter-cursor" id="typewriter"></span>
+      </p>
+      <div class="hero__actions">
+        <a href="#projects" class="btn btn--primary">
+          <i class="fa-solid fa-diagram-project"></i> View Projects
+        </a>
+        <a href="#contact" class="btn btn--outline">
+          <i class="fa-solid fa-envelope"></i> Contact Me
+        </a>
+      </div>
+      <div class="hero__socials">
+        <a href="https://www.linkedin.com/in/sajal-amir-74a42a36b/" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin-in"></i>
+        </a>
+        <a href="mailto:sajalamir426@gmail.com" aria-label="Email">
+          <i class="fa-solid fa-envelope"></i>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__visual">
+      <div class="code-card">
+        <div class="code-card__header">
+          <div class="code-card__dots">
+            <span class="dot dot--red"></span>
+            <span class="dot dot--yellow"></span>
+            <span class="dot dot--green"></span>
+          </div>
+        </div>
+        <div class="code-card__body">
+          <div>BS Computer Science student with strong problem-solving skills and a focus on
+        developing efficient, real-world software solutions.</div>
+        </div>
+      </div>
+      <div class="float-chip float-chip--1"><i class="fa-brands fa-python"></i> Python</div>
+      <div class="float-chip float-chip--2"><i class="fa-solid fa-brain"></i> AI / ML</div>
+      <div class="float-chip float-chip--3"><i class="fa-solid fa-shield-halved"></i> Security</div>
+    </div>
+
+    <a href="#about" class="scroll-indicator" aria-label="Scroll down">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="section" id="about">
+    <div class="section__head">
+      <p class="section__tag">About Me</p>
+      <h2 class="section__title">Get to know <span class="gradient-text">me</span></h2>
+    </div>
+    <div class="about">
+      <div class="about__card glow-border">
+        <p>
+          Motivated Computer Science undergraduate with a strong foundation in software development,
+          web technologies, cybersecurity, and artificial intelligence. Skilled in problem-solving and
+          project development, with a passion for creating efficient, user-focused solutions and
+          exploring emerging technologies. Committed to continuous growth and professional excellence
+          in the field of computing.
+        </p>
+        <div class="about__stats">
+          <div class="about__stat">
+            <span class="about__stat-num" data-count="6">0</span>
+            <span class="about__stat-label">Projects Built</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-num" data-count="2">0</span>
+            <span class="about__stat-label">Core Languages</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-num" data-count="5">0</span>
+            <span class="about__stat-label">Tools Mastered</span>
+          </div>
+        </div>
+      </div>
+      <div class="about__highlights">
+        <div class="highlight-card glow-border">
+          <i class="fa-solid fa-code highlight-icon"></i>
+          <h3>Software Development</h3>
+          <p>Building efficient, real-world solutions with clean, structured code.</p>
+        </div>
+        <div class="highlight-card glow-border">
+          <i class="fa-solid fa-shield-halved highlight-icon"></i>
+          <h3>Cybersecurity</h3>
+          <p>Exploring intrusion detection and safe, resilient systems.</p>
+        </div>
+        <div class="highlight-card glow-border">
+          <i class="fa-solid fa-robot highlight-icon"></i>
+          <h3>Artificial Intelligence</h3>
+          <p>Applying ML to predict, detect and prevent real-world problems.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SKILLS ===== -->
+  <section class="section" id="skills">
+    <div class="section__head">
+      <p class="section__tag">Skills & Tools</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card glow-border">
+        <div class="skill-card__icon"><i class="fa-solid fa-palette"></i></div>
+        <h3>Web Design</h3>
+        <p>Crafting clean, responsive and modern interfaces.</p>
+      </div>
+      <div class="skill-card glow-border">
+        <div class="skill-card__icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+        <h3>Problem Solving</h3>
+        <p>Breaking down complex problems into efficient solutions.</p>
+      </div>
+      <div class="skill-card glow-border">
+        <div class="skill-card__icon"><i class="fa-solid fa-laptop-code"></i></div>
+        <h3>Software Skills</h3>
+        <p>Designing & building functional software systems.</p>
+      </div>
+      <div class="skill-card glow-border">
+        <div class="skill-card__icon"><i class="fa-solid fa-terminal"></i></div>
+        <h3>Programming Skills</h3>
+        <p>Writing structured, logic-driven and scalable code.</p>
+      </div>
+      <div class="skill-card glow-border">
+        <div class="skill-card__icon"><i class="fa-solid fa-file-word"></i></div>
+        <h3>MS Office</h3>
+        <p>Word, Excel & PowerPoint for documentation and presentations.</p>
+      </div>
+      <div class="skill-card glow-border">
+        <div class="skill-card__icon"><i class="fa-solid fa-pen-ruler"></i></div>
+        <h3>Graphic Designing</h3>
+        <p>Creating visually appealing designs and brand assets.</p>
+      </div>
+    </div>
+    <h3 class="sub-section-title">Languages</h3>
+    <div class="badge-row">
+      <span class="badge glass-btn"><i class="fa-solid fa-code"></i> C++</span>
+      <span class="badge glass-btn"><i class="fa-brands fa-python"></i> Python</span>
+    </div>
+    <h3 class="sub-section-title">Tools I Use</h3>
+    <div class="tools-row">
+      <div class="tool-card glow-border">
+        <i class="fa-solid fa-code tool-icon"></i>
+        <span>VS Code</span>
+      </div>
+      <div class="tool-card glow-border">
+        <i class="fa-brands fa-adobe tool-icon"></i>
+        <span>Adobe Illustrator</span>
+      </div>
+      <div class="tool-card glow-border">
+        <i class="fa-solid fa-wand-magic-sparkles tool-icon"></i>
+        <span>Canva</span>
+      </div>
+      <div class="tool-card glow-border">
+        <i class="fa-solid fa-film tool-icon"></i>
+        <span>CapCut</span>
+      </div>
+      <div class="tool-card glow-border">
+        <i class="fa-solid fa-microchip tool-icon"></i>
+        <span>AI Tools</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section class="section" id="projects">
+    <div class="section__head">
+      <p class="section__tag">Projects</p>
+      <h2 class="section__title">Things I've <span class="gradient-text">built</span></h2>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- 1. FloodNova -->
+      <article class="project-card">
+        <div class="project-card__img-wrap">
+          <img src="proj_calculator.jpg" alt="FloodNova — Disaster Prediction System" loading="lazy">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__top">
+            <div class="project-card__icon">🌊</div>
+            <h3 class="project-card__title">Disaster Prediction — FloodNova</h3>
+          </div>
+          <p class="project-card__desc">
+            An intelligent system that analyzes environmental and historical data to predict potential
+            natural disasters such as floods, helping in early warning and risk prevention planning.
+          </p>
+          <div class="project-card__tags">
+            <span>AI / ML</span><span>Data Analysis</span><span>Prediction</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2. GENESIS+ -->
+      <article class="project-card">
+        <div class="project-card__img-wrap">
+          <img src="proj_genesis.jpg" alt="GENESIS+ — Disease Outbreak Prediction" loading="lazy">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__top">
+            <div class="project-card__icon">🧬</div>
+            <h3 class="project-card__title">Disease Outbreak Prediction — GENESIS+</h3>
+          </div>
+          <p class="project-card__desc">
+            A data-driven system designed to monitor health-related patterns and historical information
+            to identify and predict possible disease outbreaks such as Dengue and Malaria.
+          </p>
+          <div class="project-card__tags">
+            <span>Healthcare</span><span>Data Science</span><span>Prediction</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3. Hospital Management System -->
+      <article class="project-card">
+        <div class="project-card__img-wrap">
+          <img src="proj_floodnova.jpg" alt="Hospital Management System" loading="lazy">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__top">
+            <div class="project-card__icon">🏥</div>
+            <h3 class="project-card__title">Hospital Management System</h3>
+          </div>
+          <p class="project-card__desc">
+            A database management system that efficiently handles patient records, appointments and
+            hospital operations using MS Access for organized data storage and retrieval.
+          </p>
+          <div class="project-card__tags">
+            <span>MS Access</span><span>Database</span><span>Management</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4. AI Hybrid IDS -->
+      <article class="project-card">
+        <div class="project-card__img-wrap">
+          <img src="proj_ids.jpg" alt="AI Hybrid Intrusion Detection System" loading="lazy">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__top">
+            <div class="project-card__icon">🔐</div>
+            <h3 class="project-card__title">AI Hybrid Intrusion Detection System</h3>
+          </div>
+          <p class="project-card__desc">
+            A machine learning-based cybersecurity system that monitors network traffic in real-time
+            to detect and classify suspicious activities and potential cyber threats.
+          </p>
+          <div class="project-card__tags">
+            <span>Cybersecurity</span><span>Machine Learning</span><span>Networking</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5. Calculator Website -->
+      <article class="project-card">
+        <div class="project-card__img-wrap">
+          <img src="proj_hospital.jpg" alt="Calculator Website" loading="lazy">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__top">
+            <div class="project-card__icon">🧮</div>
+            <h3 class="project-card__title">Calculator Website</h3>
+          </div>
+          <p class="project-card__desc">
+            A simple and responsive web-based calculator that performs basic arithmetic operations
+            with a clean UI and smooth user experience.
+          </p>
+          <div class="project-card__tags">
+            <span>HTML</span><span>CSS</span><span>JavaScript</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6. Travel & Booking Site UI -->
+      <article class="project-card">
+        <div class="project-card__img-wrap">
+          <img src="travel.jpeg" alt="Responsive Travel & Booking Site UI" loading="lazy">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__top">
+            <div class="project-card__icon">🌐</div>
+            <h3 class="project-card__title">Responsive Travel & Booking Site UI</h3>
+          </div>
+          <p class="project-card__desc">
+            A modern travel and booking website UI designed with a responsive layout, ensuring a smooth
+            user experience across all devices with attractive visuals and navigation.
+          </p>
+          <div class="project-card__tags">
+            <span>HTML</span><span>CSS</span><span>Responsive UI</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== CERTIFICATES ===== -->
+  <section class="section" id="certificates">
+    <div class="section__head">
+      <p class="section__tag">Certificates</p>
+      <h2 class="section__title">My <span class="gradient-text">achievements</span></h2>
+    </div>
+
+    <div class="certificates-grid">
+
+      <!-- Certificate 1: Web Designer & Developer -->
+      <article class="cert-card">
+        <div class="cert-card__img-wrap">
+          <img src="cert_webdesign.jpeg" alt="PNY Trainings — Web Designer and Developer Certificate" loading="lazy">
+          <div class="cert-card__badge"><i class="fa-solid fa-certificate"></i> Verified</div>
+        </div>
+        <div class="cert-card__body">
+          <div class="cert-card__top">
+            <div class="cert-card__icon">🎨</div>
+            <h3 class="cert-card__title">Web Designer</h3>
+          </div>
+          <p class="cert-card__issuer">
+            <i class="fa-solid fa-building-columns"></i> PNY Trainings &nbsp;·&nbsp; Jun 2024
+          </p>
+          <div class="cert-card__tags">
+            <span>Front End</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Certificate 2: Advance Python -->
+      <article class="cert-card">
+        <div class="cert-card__img-wrap">
+          <img src="cert_python.jpeg" alt="NAVTTC — Advance Python Programming Certificate" loading="lazy">
+          <div class="cert-card__badge"><i class="fa-solid fa-certificate"></i> A+ Grade</div>
+        </div>
+        <div class="cert-card__body">
+          <div class="cert-card__top">
+            <div class="cert-card__icon">🐍</div>
+            <h3 class="cert-card__title">Advance Python Programming </h3>
+          </div>
+          <p class="cert-card__issuer">
+            <i class="fa-solid fa-building-columns"></i> NAVTTC — PM's Youth Programme &nbsp;·&nbsp; Jul 2025
+          </p>
+          <div class="cert-card__tags">
+            <span>Python</span><span>Applications</span><span>NAVTTC</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="section" id="contact">
+    <div class="section__head">
+      <p class="section__tag">Contact</p>
+      <h2 class="section__title">Let's <span class="gradient-text">work together</span></h2>
+    </div>
+    <div class="contact">
+      <div class="contact__info glow-border">
+        <h3>Get in touch</h3>
+        <p>Have a project in mind, an opportunity, or just want to say hi? My inbox is always open.</p>
+        <ul class="contact__list">
+          <li><i class="fa-solid fa-location-dot"></i> Pakistan</li>
+          <li><i class="fa-solid fa-graduation-cap"></i> BS Computer Science</li>
+          <li><i class="fa-solid fa-bolt"></i> Open to internships & freelance work</li>
+        </ul>
+        <div class="contact__secure-badge">
+          <i class="fa-solid fa-lock"></i>
+          <span>Messages are encrypted & secure</span>
+        </div>
+        <div class="contact__socials">
+          <a href="https://www.linkedin.com/in/sajal-amir-74a42a36b/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+
+      <form class="contact__form glow-border" id="contact-form" novalidate>
+        <div class="honeypot-field" aria-hidden="true">
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <input type="hidden" id="csrf-token" name="csrf_token" value="">
+        <div class="form-group">
+          <input type="text" id="name" name="user_name" placeholder=" " required maxlength="100" autocomplete="name">
+          <label for="name">Your Name</label>
+          <span class="field-error" id="name-error"></span>
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" name="user_email" placeholder=" " required maxlength="200" autocomplete="email">
+          <label for="email">Your Email</label>
+          <span class="field-error" id="email-error"></span>
+        </div>
+        <div class="form-group">
+          <textarea id="message" name="message" placeholder=" " required maxlength="2000"></textarea>
+          <label for="message">Your Message</label>
+          <span class="field-error" id="message-error"></span>
+          <span class="char-count" id="char-count">0 / 2000</span>
+        </div>
+        <button type="submit" class="btn btn--primary btn--full" id="form-submit">
+          <span class="btn-text"><i class="fa-solid fa-paper-plane"></i> Send Message</span>
+          <span class="btn-loading"><i class="fa-solid fa-spinner fa-spin"></i> Sending...</span>
+        </button>
+        <p class="form-status" id="form-status"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>Designed & built by <span class="gradient-text">Sajal Amir</span></p>
+    <p class="footer__small">&copy; <span id="year"></span> All rights reserved.</p>
+    <a href="#home" class="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
