@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---------- Scroll reveal ---------- */
   const revealTargets = document.querySelectorAll(
-    ".about__card, .highlight-card, .skill-card, .tool-card, .project-card, .contact__info, .contact__form, .badge-row"
+    ".about__card, .highlight-card, .skill-card, .tool-card, .exp-card, .project-card, .contact__info, .contact__form, .badge-row"
   );
   revealTargets.forEach(el => el.setAttribute("data-reveal", ""));
 
